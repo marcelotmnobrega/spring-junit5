@@ -22,4 +22,8 @@ public class ProductService {
     public boolean update(Product p) {
         throw new UnsupportedOperationException();
     }
+
+    public boolean delete(int id) {
+        throw new UnsupportedOperationException();
+    }
 }

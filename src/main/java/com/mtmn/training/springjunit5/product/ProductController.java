@@ -96,4 +96,19 @@ public class ProductController {
         }).orElse(ResponseEntity.notFound().build());
     }
 
+    @DeleteMapping("/product/{id}")
+    public ResponseEntity deleteProduct(@PathVariable Integer id){
+
+        logger.info("Deleting product with Id: {}", id);
+
+        Optional<Product> existingProduct = productService.findById(id);
+        return existingProduct.map(p-> {
+            if (productService.delete(p.getId())){
+                return ResponseEntity.ok().build();
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
 }
