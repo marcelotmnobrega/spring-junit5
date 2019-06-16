@@ -1,29 +1,35 @@
 package com.mtmn.training.springjunit5.product;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ProductService {
 
-    public Optional<Product> findById(int i) {
-        throw new UnsupportedOperationException();
+    private final ProductRepository productRepository;
+
+    public Optional<Product> findById(Integer id) {
+        return productRepository.findById(id);
     }
 
-    public Iterable<Product> findAll() {
-        throw new UnsupportedOperationException();
+    public List<Product> findAll() {
+        return productRepository.findAll();
     }
 
     public Product save(Product product) {
-        throw new UnsupportedOperationException();
+        product.setVersion(1);
+        return productRepository.save(product);
     }
 
-    public boolean update(Product p) {
-        throw new UnsupportedOperationException();
+    public boolean update(Product product) {
+        return productRepository.update(product);
     }
 
-    public boolean delete(int id) {
-        throw new UnsupportedOperationException();
+    public boolean delete(Integer id) {
+        return productRepository.delete(id);
     }
 }
