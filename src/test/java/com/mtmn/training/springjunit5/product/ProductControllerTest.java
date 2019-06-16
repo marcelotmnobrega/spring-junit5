@@ -15,8 +15,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
 
-import static org.assertj.core.internal.bytebuddy.matcher.ElementMatchers.any;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -94,7 +94,7 @@ class ProductControllerTest {
 
     @Test
     @DisplayName("PUT /product/1 - Success")
-    void testProductPutSucess() throws Exception {
+    void testProductPutSuccess() throws Exception {
         //Setup mocked service
         Product putProduct = new Product("Product Name", 10);
         Product mockProduct = new Product(1, "Product Name", 10, 1);
@@ -111,7 +111,7 @@ class ProductControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 
                 //Validate the headers
-                .andExpect(header().string(HttpHeaders.ETAG, "\"1\""))
+                .andExpect(header().string(HttpHeaders.ETAG, "\"2\""))
                 .andExpect(header().string(HttpHeaders.LOCATION, "/product/1"))
 
                 //Validate the returned fields

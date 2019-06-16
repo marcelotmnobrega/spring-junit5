@@ -76,7 +76,7 @@ public class ProductController {
             //Update the product (incrementing the version number)
             p.setName(product.getName());
             p.setQuantity(product.getQuantity());
-            p.setVersion(product.getVersion() + 1);
+            p.setVersion(p.getVersion() + 1);
 
             logger.info("Updating product with Id={} -> Name={}, quantity={}, version={}",
                     p.getId(), p.getName(), p.getQuantity(), p.getVersion());
