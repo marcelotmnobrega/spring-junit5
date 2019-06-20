@@ -40,7 +40,7 @@ public class ReviewController {
     }
 
     @GetMapping("/reviews")
-    public Iterable<Review> getReviews(@RequestParam(value="productId", required = false) Optional<String> productId) {
+    public Iterable<Review> getReviews(@RequestParam(value = "productId", required = false) Optional<String> productId) {
         return productId.map(pid -> {
             return service.findByProductId(Integer.valueOf(pid))
                     .map(Arrays::asList)
@@ -66,8 +66,47 @@ public class ReviewController {
         } catch (URISyntaxException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
 
+    @PostMapping("/review/{productId}/entry")
+    public ResponseEntity<Review> addEntryToReview(@PathVariable Integer productId, @RequestBody ReviewEntry entry) {
+        logger.info("Add review entry for product id: {}, {}", productId, entry);
 
+        //Retrieve the review for the specified productId; if there is no review, create a new one
+        Review review = service.findByProductId(productId).orElseGet(() -> new Review(productId));
+
+        //Add this new entry to the review
+        entry.setDate(new Date());
+        review.getEntries().add(entry);
+
+        //Save the review
+        Review updatedReview = service.save(review);
+        logger.info("Updated review: {}", updatedReview);
+
+        try {
+            return ResponseEntity
+                    .ok()
+                    .location(new URI("/review/" + updatedReview.getId()))
+                    .eTag(Integer.toString(updatedReview.getVersion()))
+                    .body(updatedReview);
+        } catch (URISyntaxException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @DeleteMapping("/review/{id}")
+    public ResponseEntity<?> deleteReview(@PathVariable String id) {
+
+        logger.info("Deleting review with Id {}", id);
+
+        //Get the existing product
+        Optional<Review> existingReview = service.findById(id);
+
+        //Delete the review if it exists in the database
+        return existingReview.map(review -> {
+            service.delete(review.getId());
+            return ResponseEntity.ok().build();
+        }).orElse(ResponseEntity.notFound().build());
     }
 
 

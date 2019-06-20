@@ -16,7 +16,7 @@ public class ReviewService {
         return repository.findById(id);
     }
 
-    public Optional<List<Review>> findByProductId(Integer productId) {
+    public Optional<Review> findByProductId(Integer productId) {
         return repository.findByProductId(productId);
     }
 
@@ -25,6 +25,16 @@ public class ReviewService {
     }
 
     public Review save(Review review) {
+        review.setVersion(1);
         return repository.save(review);
+    }
+
+    public Review update(Review review) {
+        review.setVersion(review.getVersion() + 1);
+        return repository.save(review);
+    }
+
+    public void delete(String id){
+        repository.deleteById(id);
     }
 }
